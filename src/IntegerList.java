@@ -5,7 +5,7 @@ public interface IntegerList {
 
     Integer set(int index, Integer item);
 
-    Integer remove(String item);
+    Integer remove(Integer item);
 
     Integer remove(int index);
 

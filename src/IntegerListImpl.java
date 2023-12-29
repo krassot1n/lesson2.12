@@ -15,6 +15,7 @@ public class IntegerListImpl implements IntegerList{
 
     @Override
     public Integer add(Integer item) {
+        validateSize();
         validateItem(item);
         if (size == storage.length) {
             resizeArray();
@@ -27,6 +28,7 @@ public class IntegerListImpl implements IntegerList{
     @Override
     public Integer add(int index, Integer item) {
         validateIndex(index);
+        validateSize();
         validateItem(item);
         if (size == storage.length) {
             resizeArray();
@@ -117,19 +119,10 @@ public class IntegerListImpl implements IntegerList{
 
     @Override
     public boolean equals(IntegerList otherList) {
-        validateItem(Integer.valueOf(otherList.toString()));
-        if (this == otherList){
-            return true;
+        for (int i = 0; i < storage.length; i++) {
+            validateItem(otherList.get(i));
         }
-        if (this.size != otherList.size()){
-            return false;
-        }
-        for (int i = 0; i < size; i++) {
-            if (!storage[i].equals(otherList.get(i))){
-                return false;
-            }
-        }
-        return true;
+        return Arrays.equals(this.toArray(), otherList.toArray());
     }
 
     @Override
@@ -181,6 +174,44 @@ public class IntegerListImpl implements IntegerList{
     public void validateItem(Integer item) {
         if (item == null) {
             throw new NullItemException("Null item are not allowed");
+        }
+    }
+    private static void sortInsertion(Integer[] arr) {
+        for (int i = 1; i < arr.length; i++) {
+            int temp = arr[i];
+            int j = i;
+            while (j > 0 && arr[j - 1] >= temp) {
+                arr[j] = arr[j - 1];
+                j--;
+            }
+            arr[j] = temp;
+        }
+    }
+    private static void swapElements(Integer[] arr, int indexA, int indexB) {
+        int tmp = arr[indexA];
+        arr[indexA] = arr[indexB];
+        arr[indexB] = tmp;
+    }
+
+    private void sortSelection(Integer[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            int minElementIndex = i;
+            for (int j = i + 1; j < arr.length; j++) {
+                if (arr[j] < arr[minElementIndex]) {
+                    minElementIndex = j;
+                }
+            }
+            swapElements(arr, i, minElementIndex);
+        }
+    }
+
+    private void sortBubbles(Integer[] arr) {
+        for (int i = 0; i < arr.length - 1; i++) {
+            for (int j = 0; j < arr.length - 1 - i; j++) {
+                if (arr[j] > arr[j + 1]) {
+                    swapElements(arr, j, j + 1);
+                }
+            }
         }
     }
 }
